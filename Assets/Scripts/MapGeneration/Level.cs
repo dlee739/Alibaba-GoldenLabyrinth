@@ -13,7 +13,10 @@ public class Level : MonoBehaviour
 
     public static float RoomGenerationChance = .5f; // Chance of a room being generated
 
-    public static int RoomLimit = 6; // Maximum number of rooms
+    // public static int RoomLimit = 6; // Maximum number of rooms
+    // in the fifth video it is changed to 5
+    public static int RoomLimit = 5;
+
 
     public static Sprite TreasureRoomIcon;
     public static Sprite BossRoomIcon;

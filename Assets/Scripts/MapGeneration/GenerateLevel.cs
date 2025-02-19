@@ -28,7 +28,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     bool CheckIfRoomExists(Vector2 v)
     {
-        return(Level.Rooms.Exists(x => x.Location == v));
+        return (Level.Rooms.Exists(x => x.Location == v));
     }
 
     bool CheckIfRoomsAroundGeneratedRoom(Vector2 v, string direction)
@@ -181,6 +181,64 @@ public class NewBehaviourScript : MonoBehaviour
 
     }
 
+    private void GenerateBossRoom()
+    {
+        float MaxNumber = 0;
+        Vector2 FathestRoom = Vector2.zero;
+
+        foreach (Room R in Level.Rooms)
+        {
+            if (Mathf.Abs(R.Location.x) + Mathf.Abs(R.Location.y) > MaxNumber)
+            {
+                MaxNumber = Mathf.Abs(R.Location.x) + Mathf.Abs(R.Location.y);
+                FathestRoom = R.Location;
+            }
+        }
+
+        Room BossRoom = new Room();
+        BossRoom.RoomImage = Level.BossRoomIcon;
+        BossRoom.RoomNumber = 3;
+
+        // Left
+        if (!CheckIfRoomExists(FathestRoom + new Vector2(-1, 0)))
+        {
+            if (!CheckIfRoomsAroundGeneratedRoom(new Vector2(-1, 0) + FathestRoom, "Right"))
+            {
+                BossRoom.Location = new Vector2(-1, 0) + FathestRoom;
+            }
+        }
+
+        // Right
+        else if (!CheckIfRoomExists(FathestRoom + new Vector2(1, 0)))
+        {
+            if (!CheckIfRoomsAroundGeneratedRoom(new Vector2(1, 0) + FathestRoom, "Left"))
+            {
+                BossRoom.Location = new Vector2(1, 0) + FathestRoom;
+            }
+        }
+
+        // Up
+        else if (!CheckIfRoomExists(FathestRoom + new Vector2(0, 1)))
+        {
+            if (!CheckIfRoomsAroundGeneratedRoom(new Vector2(0, 1) + FathestRoom, "Down"))
+            {
+                BossRoom.Location = new Vector2(0, 1) + FathestRoom;
+            }
+        }
+
+        // Down
+        else if (!CheckIfRoomExists(FathestRoom + new Vector2(0, -1)))
+        {
+            if (!CheckIfRoomsAroundGeneratedRoom(new Vector2(0, -1) + FathestRoom, "Up"))
+            {
+                BossRoom.Location = new Vector2(0, -1) + FathestRoom;
+            }
+        }
+
+        DrawRoomOnMap(BossRoom);
+
+    }
+
     private void Awake()
     {
         Level.DefaultRoomIcon = EmptyRoom;
@@ -256,6 +314,8 @@ public class NewBehaviourScript : MonoBehaviour
                 Generate(newRoom);
             }
         }
+
+        GenerateBossRoom();
     }
 
 
@@ -267,7 +327,7 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKey(KeyCode.Tab) && !regenerating)
+        if (Input.GetKey(KeyCode.Tab) && !regenerating)
         {
             regenerating = true;
             Invoke(nameof(StopRegenerating), 1);
