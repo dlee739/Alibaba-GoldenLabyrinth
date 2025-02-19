@@ -6,27 +6,21 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public CharacterController Controller;
-    public Animator A;
-    public Camera cam;
-
-    public float Speed = 0.01f;
 
     private void Update()
     {
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        if (h != 0 || v != 0) // Movement
+        if ((h != 0 || v != 0) && Player.State == "Idle")// Movement
         {
-            A.Play("Walk");
-            
-        }
-        else
-        {
-            A.Play("Idle");
+            Player.animator.SetFloat("Speed", 1);
+            // Player.animator.Play("Walk");
+        } else {
+            Player.animator.SetFloat("Speed", 0);
         }
 
-        Vector3 Move = new Vector3(h, 0, v) * Speed;
+        Vector3 Move = new Vector3(h, 0, v) * Player.Speed;
         Controller.Move(Move);
 
         Plane playerplane = new Plane(Vector3.up, transform.position);
@@ -48,8 +42,8 @@ public class PlayerMovement : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 targetposition = transform.position + new Vector3(0, 69, 0);
-        Vector3 newPosition = Vector3.MoveTowards(cam.transform.position, targetposition, 150f * Time.deltaTime);
-        cam.transform.position = newPosition;
+        Vector3 newPosition = Vector3.MoveTowards(Player.Camera.transform.position, targetposition, 150f * Time.deltaTime);
+        Player.Camera.transform.position = newPosition;
     }
 
 
