@@ -32,7 +32,7 @@ public class Level : MonoBehaviour
 
 public class Room
 {
-    public int RoomNumber = 0;
+    public int RoomNumber = 6;
     public Vector2 Location;
     public Sprite RoomImage;
 
